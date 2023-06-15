@@ -52,7 +52,7 @@ export const signUpProvider = CredentialsProvider({
                     role: "USER"
                 },
             }).catch(() => {
-
+                console.log('error')
                 throw new Error('badRegisterCredentials');
 
             })
