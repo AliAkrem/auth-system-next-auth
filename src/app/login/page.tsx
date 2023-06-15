@@ -10,8 +10,9 @@ export default function LoginPage() {
 
   if (status === "authenticated") {
     router.replace('/');
-
   }
 
-  return status === "unauthenticated" ? <LoginForm /> : <Loading />;
+  return (status === "unauthenticated" ? <LoginForm /> : <Loading />);
+
+
 }

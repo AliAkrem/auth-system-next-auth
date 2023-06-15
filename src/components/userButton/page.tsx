@@ -64,25 +64,20 @@ export default function UserButton({
           </Text>
         </div>
 
-        {<IconChevronRight size="0.9rem" stroke={1.5} />}
+      
       </Group>
 
     </UnstyledButton>   
       </Menu.Target>
       <Menu.Dropdown>
-
-
         <Menu.Item
+
           icon={<IconUsers size="1rem"  stroke={1.5} />}
           onClick={()=>{
-
-
             signOut()
-
-
           }}
         >
-            <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+            <Text  size="xs" transform="uppercase" weight={700} color="dimmed">
               Sign Out
             </Text>
         </Menu.Item>

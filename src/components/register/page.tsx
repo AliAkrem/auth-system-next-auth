@@ -1,5 +1,5 @@
 "use client";
-import React, { startTransition, useTransition } from "react";
+import React, { startTransition, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 // ? mantine component requirement _______________________________________
 import {
@@ -14,6 +14,7 @@ import {
   Anchor,
   rem,
   Alert,
+  Overlay,
 } from "@mantine/core";
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -86,21 +87,21 @@ export default function RegisterForm() {
     },
   }); // * _________________________________________________________________________
 
-  const [isPending, startTransition] = useTransition();
-
-  const _handleRegister = () => {
-    startTransition(() => {
-      handleRegister(registerForm.values);
-    });
-  };
-
   const router = useRouter();
 
-  const  error  = useSearchParams() ; 
+  const [registerLoading, setRegisterLoading] = useState(false);
+
+  const error = useSearchParams();
+
+  const _handleRegister = () => {
+    setRegisterLoading(true);
+    handleRegister(registerForm.values, router, setRegisterLoading);
+  };
 
   return (
     <>
       <div className={classes.wrapper}>
+        {registerLoading && <Overlay opacity={0} />}
         <Paper className={classes.form} radius={0} p={30}>
           <Title
             order={2}
@@ -109,18 +110,19 @@ export default function RegisterForm() {
             mt="md"
             mb={50}
           >
+          
             sign up
           </Title>
           {error?.get("error") === "badRegisterCredentials" && (
-          <Alert
-            icon={<IconAlertCircle size="1rem" />}
-            title="bad credentials"
-            color="red"
-            mb="30px"
-          >
-            Sign up failed. Check the details you provided are correct.
-          </Alert>
-        )}
+            <Alert
+              icon={<IconAlertCircle size="1rem" />}
+              title="bad credentials"
+              color="red"
+              mb="30px"
+            >
+              Sign up failed. Check the details you provided are correct.
+            </Alert>
+          )}
           <form onSubmit={registerForm.onSubmit(_handleRegister)}>
             <TextInput
               label="User Name"
@@ -149,7 +151,14 @@ export default function RegisterForm() {
               size="md"
               {...registerForm.getInputProps("confirm")}
             />
-            <Button  disabled={isPending} type="submit" variant="outline" fullWidth mt="xl" size="md">
+            <Button
+              disabled={registerLoading}
+              type="submit"
+              variant="outline"
+              fullWidth
+              mt="xl"
+              size="md"
+            >
               Register
             </Button>
           </form>

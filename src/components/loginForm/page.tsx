@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useTransition } from "react";
+import React, { useState } from "react";
 //? mantine components requirement _________________________________________
 import {
   Paper,
@@ -11,6 +11,7 @@ import {
   Text,
   rem,
   Alert,
+  Overlay,
 } from "@mantine/core";
 //? ________________________________________________________________
 //? style requirement _________________________________________
@@ -46,7 +47,7 @@ const useStyles = createStyles((theme) => ({
 import { isEmail, isNotEmpty, useForm } from "@mantine/form";
 import { combineValidators } from "@/validators/combineValidators";
 import { isPasswordValid } from "@/validators/validSchema";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { IconAlertCircle } from "@tabler/icons-react";
 import handleLogin from "@/functions/handleLogin";
 import { useSession } from "next-auth/react";
@@ -54,10 +55,12 @@ import { useSession } from "next-auth/react";
 
 export default function LoginForm() {
   const { classes } = useStyles();
+
   const router = useRouter();
+
   const searchParams = useSearchParams();
 
-  const [isPending, startTransition] = useTransition();
+  const [loginLoading, setLoginLoading] = useState(false);
 
   // *________________ form data and validation schema __________________________
   const loginForm = useForm({
@@ -80,17 +83,14 @@ export default function LoginForm() {
   });
   // * __________________________________________
 
-
-  const {status}  =  useSession() 
-
   const _handleLogin = () => {
-    startTransition(() => {
-      handleLogin(loginForm.values ,status, router );
-    });
+    setLoginLoading(true);
+    handleLogin(loginForm.values, router, setLoginLoading);
   };
 
   return (
     <div className={classes.wrapper}>
+      {loginLoading && <Overlay opacity={0} />}
       <Paper className={classes.form} radius={0} p={30}>
         <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
           Log in
@@ -105,7 +105,6 @@ export default function LoginForm() {
             Sign in failed. Check the details you provided are correct.
           </Alert>
         )}
-
         <form onSubmit={loginForm.onSubmit(_handleLogin)}>
           <TextInput
             label="Email address"
@@ -120,9 +119,8 @@ export default function LoginForm() {
             size="md"
             {...loginForm.getInputProps("password")}
           />
-
           <Button
-            disabled={isPending}
+            disabled={loginLoading}
             type="submit"
             variant="outline"
             fullWidth

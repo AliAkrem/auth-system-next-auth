@@ -78,7 +78,7 @@
 
 .load {
   min-height: 100vh;
-  background-color: #1d2630;
+  /* background-color: #1d2630; */
   display: flex;
     align-items: center;
     justify-content: center;
@@ -208,7 +208,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: #d6336c;
+  background-color: #1971c2;
 }
 
 .pulse-bubble-1 {

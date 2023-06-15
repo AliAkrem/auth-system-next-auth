@@ -393,7 +393,7 @@
   dependencies:
     "@mantine/utils" "6.0.13"
 
-"@mantine/ssr@6.0.13":
+"@mantine/ssr@6.0.13", "@mantine/ssr@^6.0.13":
   version "6.0.13"
   resolved "https://registry.yarnpkg.com/@mantine/ssr/-/ssr-6.0.13.tgz#5ccfdc8b7c26e16c326b7f91200f6a38bb58965e"
   integrity sha512-IMeWkzTvBM5/LjAprdF6o0Xn6U8mv/Hi88YDZpTLDkRAc9QBEOy4P9zOmpHz3YLRFHQm+Hqr078YckDh5F+KXQ==

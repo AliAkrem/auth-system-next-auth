@@ -35,6 +35,7 @@ import {
   IconDatabase,
   IconBrandMantine,
   IconLetterN,
+  IconLogout,
 } from "@tabler/icons-react/";
 import Link from "next/link";
 const useStyles = createStyles((theme) => ({
@@ -56,6 +57,8 @@ const useStyles = createStyles((theme) => ({
       width: "100%",
     },
 
+
+
     ...theme.fn.hover({
       backgroundColor:
         theme.colorScheme === "dark"
@@ -65,9 +68,10 @@ const useStyles = createStyles((theme) => ({
   },
 
   subLink: {
-    width: "100%",
+    width: "70%",
     padding: `${theme.spacing.xs} ${theme.spacing.md}`,
     borderRadius: theme.radius.md,
+
 
     ...theme.fn.hover({
       backgroundColor:
@@ -75,6 +79,11 @@ const useStyles = createStyles((theme) => ({
           ? theme.colors.dark[7]
           : theme.colors.gray[0],
     }),
+
+    [theme.fn.smallerThan("md")]: {
+  
+      width: "50%",
+    },
 
     "&:active": theme.activeStyles,
   },
@@ -86,11 +95,16 @@ const useStyles = createStyles((theme) => ({
         : theme.colors.gray[0],
     margin: `calc(${theme.spacing.md} * -1)`,
     marginTop: theme.spacing.sm,
+
     padding: `${theme.spacing.md} calc(${theme.spacing.md} * 2)`,
+
     paddingBottom: theme.spacing.xl,
+
     borderTop: `${rem(1)} solid ${
       theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1]
     }`,
+
+
   },
 
   hiddenMobile: {
@@ -144,7 +158,7 @@ const mockdata = [
       "Used by some of the world's largest companies, Next.js enables you to create full-stack Web applications by extending the latest React features, and integrating powerful Rust-based JavaScript tooling for the fastest builds.",
   },
 ];
-import { getSession, useSession } from "next-auth/react";
+import { getSession, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import UserButton from "../userButton/page";
 import { useEffect } from "react";
@@ -152,7 +166,10 @@ import { useEffect } from "react";
 export default function HomeNavBar() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
+
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
+  const [logoutOpened, { toggle: toggleLogout }] = useDisclosure(false);
+
   const { classes, theme } = useStyles();
 
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -160,14 +177,6 @@ export default function HomeNavBar() {
 
   const router = useRouter();
   const { data: session, status, update } = useSession();
-
-  // useEffect(async () => {
-  // const updatedSession = await getSession();
-  // update(updatedSession);
-
-  // }, []);
-
-  // Update the session in the client
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
@@ -211,7 +220,7 @@ export default function HomeNavBar() {
                 <a href="#" className={classes.link}>
                   <Center inline>
                     <Box component="span" mr={5}>
-                      Features
+                      Dev Tools
                     </Box>
                     <IconChevronDown
                       size={16}
@@ -221,9 +230,10 @@ export default function HomeNavBar() {
                 </a>
               </HoverCard.Target>
 
-              <HoverCard.Dropdown sx={{ overflow: "hidden" }}>
+              <HoverCard.Dropdown  sx={{ overflow: "hidden" }}>
+
                 <Group position="apart" px="md">
-                  <Text fw={500}>Features</Text>
+                  <Text fw={500}>Dev Tools</Text>
                 </Group>
 
                 <Divider
@@ -240,7 +250,9 @@ export default function HomeNavBar() {
                   <Group position="apart">
                     <div>
                       <Text fw={500} fz="sm">
-                        <Link href="/sign-up">Get started</Link>
+                        {status === "unauthenticated" && (
+                          <Link href="/sign-up">Get started</Link>
+                        )}
                       </Text>
                       <Text size="xs" color="dimmed">
                         try sign-up and login system using{" "}
@@ -252,22 +264,24 @@ export default function HomeNavBar() {
                         </Text>{" "}
                       </Text>
                     </div>
-                    <Button
-                      variant="default"
-                      onClick={() => {
-                        router.push("/sign-up");
-                      }}
-                    >
-                      Get started
-                    </Button>
+                    {status === "unauthenticated" && (
+                      <Button
+                        variant="default"
+                        onClick={() => {
+                          router.push("/sign-up");
+                        }}
+                      >
+                        Get started
+                      </Button>
+                    )}
                   </Group>
                 </div>
               </HoverCard.Dropdown>
             </HoverCard>
-            <a href="#" className={classes.link}>
+            <a href="/" className={classes.link}>
               Learn
             </a>
-            <a href="#" className={classes.link}>
+            <a href="/" className={classes.link}>
               Academy
             </a>
           </Group>
@@ -330,7 +344,16 @@ export default function HomeNavBar() {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navigation"
+        title={
+          <ActionIcon
+            variant="outline"
+            color={dark ? "yellow" : "blue"}
+            onClick={() => toggleColorScheme()}
+            title="Toggle color scheme"
+          >
+            {dark ? <IconSun size="1.1rem" /> : <IconMoonStars size="1.1rem" />}
+          </ActionIcon>
+        }
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
@@ -341,7 +364,7 @@ export default function HomeNavBar() {
           />
 
           <Link
-            href="#"
+            href="/"
             className={classes.link}
             onClick={() => {
               closeDrawer();
@@ -352,44 +375,79 @@ export default function HomeNavBar() {
           <UnstyledButton className={classes.link} onClick={toggleLinks}>
             <Center inline>
               <Box component="span" mr={5}>
-                Features
+                Dev Tools
               </Box>
               <IconChevronDown size={16} color={theme.fn.primaryColor()} />
             </Center>
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
+
           <a href="#" className={classes.link}>
             Learn
           </a>
           <a href="#" className={classes.link}>
             Academy
           </a>
-
           <Divider
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
 
-          <Group position="center" grow pb="xl" px="md">
-            <Button
-              variant="default"
-              onClick={() => {
-                router.push("/login");
-                closeDrawer();
-              }}
-            >
-              Log in
-            </Button>
-            <Button
-              onClick={() => {
-                router.push("/sign-up");
-                closeDrawer();
-              }}
-              className="text-black"
-            >
-              Sign up
-            </Button>
-          </Group>
+          {status === "authenticated" ? (
+            <>
+              <div className="flex items-center" onClick={toggleLogout}>
+                <UserButton
+                  name={session.user?.name}
+                  email={session.user?.email}
+                />
+              </div>
+              <Collapse in={logoutOpened}>
+                <UnstyledButton className={classes.subLink}>
+                  <Group noWrap align="center">
+                    <ThemeIcon size={34} variant="default" radius="md">
+                      <IconLogout
+                        size={rem(22)}
+                        color={theme.fn.primaryColor()}
+                      />
+                    </ThemeIcon>
+
+                    <div>
+                      <Text
+                        size="sm"
+                        fw={500}
+                        onClick={() => {
+                          signOut();
+                        }}
+                      >
+                        log out
+                      </Text>
+                    </div>
+                  </Group>
+                </UnstyledButton>
+              </Collapse>
+            </>
+          ) : (
+            <Group position="center" grow pb="xl" px="md">
+              <Button
+                variant="default"
+                onClick={() => {
+                  router.push("/login");
+                  closeDrawer();
+                }}
+              >
+                Log in
+              </Button>
+              <Button
+                onClick={() => {
+                  router.push("/sign-up");
+                  closeDrawer();
+                }}
+                className="text-black"
+              >
+                Sign up
+              </Button>
+            </Group>
+          )}
         </ScrollArea>
       </Drawer>
     </Box>

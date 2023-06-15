@@ -89,10 +89,7 @@ import { useRouter } from "next/navigation";
 export default function HomeHeroImage() {
   const router = useRouter();
 
-
-  const {data : session} = useSession()
-
-  
+  const { data: session, status } = useSession();
 
   const { classes } = useStyles();
   return (
@@ -101,12 +98,26 @@ export default function HomeHeroImage() {
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>
-              A{" "}
+              {status === "authenticated" ? (
+                <>
+                  <Text
+                    component="span"
+                    inherit
+                    variant="gradient"
+                    gradient={{ from: "pink", to: "blue" }}
+                  >
+                    {session.user?.name},
+                  </Text>{" "}
+                  welcome in
+                </>
+              ) : (
+                "A"
+              )}{" "}
               <Text
                 component="span"
                 inherit
                 variant="gradient"
-                gradient={{ from: "pink", to: "yellow" }}
+                gradient={{ from: "pink", to: "blue" }}
               >
                 Next-Auth
               </Text>{" "}
@@ -122,19 +133,20 @@ export default function HomeHeroImage() {
                 <li>mantine ui component</li>
               </ul>
             </Text>
-
-            <Button
-              variant="outline"
-              gradient={{ from: "pink", to: "yellow" }}
-              size="xl"
-              className={classes.control}
-              mt={40}
-              onClick={() => {
-                router.push("/sign-up");
-              }}
-            >
-              Get started
-            </Button>
+            {status === "unauthenticated" && (
+              <Button
+                variant="outline"
+                gradient={{ from: "pink", to: "yellow" }}
+                size="xl"
+                className={classes.control}
+                mt={40}
+                onClick={() => {
+                  router.push("/sign-up");
+                }}
+              >
+                Get started
+              </Button>
+            )}
           </div>
         </div>
       </Container>

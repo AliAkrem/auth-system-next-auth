@@ -14,16 +14,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
-
-
   return (
     <html lang="en">
       <body className={inter.className}>
         <Providers>
           <HomeNavBar />
           {children}
-          <HomeFooter/>
+          <HomeFooter />
         </Providers>
       </body>
     </html>

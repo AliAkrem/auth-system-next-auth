@@ -5,8 +5,6 @@ import {
   MantineProvider,
 } from "@mantine/core";
 
-
-
 import { Notifications } from "@mantine/notifications";
 import { SessionProvider } from "next-auth/react";
 import { useState, useEffect } from "react";
@@ -22,6 +20,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     defaultValue: "dark",
   });
 
+
   const toggleColorScheme = () =>
     setColorScheme((current) => (current === "dark" ? "light" : "dark"));
 
@@ -30,13 +29,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   return isLoading == true ? (
-    <Loading />
+    <Loading/>
   ) : (
-    <SessionProvider
-      refetchInterval={5 * 60}
-      // Re-fetches session when window is focused
-      refetchOnWindowFocus={true}
-    >
+    <SessionProvider refetchInterval={5 * 60} refetchOnWindowFocus={true}>
       <ColorSchemeProvider
         colorScheme={colorScheme}
         toggleColorScheme={toggleColorScheme}
@@ -46,7 +41,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           withNormalizeCSS
           theme={{
             colorScheme: colorScheme,
-            primaryColor: "pink",
+            primaryColor: "blue",
             loader: "dots",
           }}
         >

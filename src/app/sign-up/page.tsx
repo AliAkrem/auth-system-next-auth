@@ -3,18 +3,15 @@
 import RegisterForm from "@/components/register/page";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
-
-
-
+import Loading from "./loading";
 
 export default function SignUpPage() {
   const router = useRouter();
-  const session = useSession();
+  const { data: session, status } = useSession();
 
-  if (session.data) {
-    router.push("/");
+  if (status === "authenticated") {
+    router.replace("/");
   }
 
-  return <RegisterForm />;
+  return status === "unauthenticated" ? <RegisterForm /> : <Loading />;
 }

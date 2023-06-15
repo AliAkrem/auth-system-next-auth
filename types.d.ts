@@ -1,7 +1,5 @@
 type registerCredentials = {
-    registerCredentials: {
-        email: string,
-        userName: string,
-        password: string
-    }
+    email: string,
+    name: string,
+    password: string
 }
