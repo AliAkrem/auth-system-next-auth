@@ -10,6 +10,7 @@ import { SessionProvider } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Loading from "./loading";
 import { useLocalStorage } from "@mantine/hooks";
+import RootStyleRegistry from "./emotion";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [isLoading, setLoading] = useState(true);
@@ -20,7 +21,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
     defaultValue: "dark",
   });
 
-
   const toggleColorScheme = () =>
     setColorScheme((current) => (current === "dark" ? "light" : "dark"));
 
@@ -29,26 +29,28 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   return isLoading == true ? (
-    <Loading/>
+    <Loading />
   ) : (
     <SessionProvider refetchInterval={5 * 60} refetchOnWindowFocus={true}>
-      <ColorSchemeProvider
+      {/* <ColorSchemeProvider
         colorScheme={colorScheme}
         toggleColorScheme={toggleColorScheme}
-      >
-        <MantineProvider
+      > */}
+      {/* <MantineProvider
           withGlobalStyles
           withNormalizeCSS
           theme={{
             colorScheme: colorScheme,
-            primaryColor: "blue",
+            primaryColor: "blue", 
             loader: "dots",
           }}
-        >
-          <Notifications position="bottom-left" />
-          {children}
-        </MantineProvider>
-      </ColorSchemeProvider>
+        > */}
+      <RootStyleRegistry>
+        <Notifications position="bottom-left" />
+        {children}
+      </RootStyleRegistry>
+      {/* </MantineProvider> */}
+      {/* </ColorSchemeProvider> */}
     </SessionProvider>
   );
 }

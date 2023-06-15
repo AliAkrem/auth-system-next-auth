@@ -57,8 +57,6 @@ const useStyles = createStyles((theme) => ({
       width: "100%",
     },
 
-
-
     ...theme.fn.hover({
       backgroundColor:
         theme.colorScheme === "dark"
@@ -68,10 +66,9 @@ const useStyles = createStyles((theme) => ({
   },
 
   subLink: {
-    width: "70%",
+    width: "100%",
     padding: `${theme.spacing.xs} ${theme.spacing.md}`,
     borderRadius: theme.radius.md,
-
 
     ...theme.fn.hover({
       backgroundColor:
@@ -79,11 +76,6 @@ const useStyles = createStyles((theme) => ({
           ? theme.colors.dark[7]
           : theme.colors.gray[0],
     }),
-
-    [theme.fn.smallerThan("md")]: {
-  
-      width: "50%",
-    },
 
     "&:active": theme.activeStyles,
   },
@@ -103,8 +95,6 @@ const useStyles = createStyles((theme) => ({
     borderTop: `${rem(1)} solid ${
       theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1]
     }`,
-
-
   },
 
   hiddenMobile: {
@@ -210,7 +200,8 @@ export default function HomeNavBar() {
             </Link>
 
             <HoverCard
-              width={960}
+              // keepMounted={true}
+              width={760}
               position="bottom"
               radius="md"
               shadow="md"
@@ -229,9 +220,7 @@ export default function HomeNavBar() {
                   </Center>
                 </a>
               </HoverCard.Target>
-
-              <HoverCard.Dropdown  sx={{ overflow: "hidden" }}>
-
+              <HoverCard.Dropdown sx={{ overflow: "hidden" }}>
                 <Group position="apart" px="md">
                   <Text fw={500}>Dev Tools</Text>
                 </Group>
